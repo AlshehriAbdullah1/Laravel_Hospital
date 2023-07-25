@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
 //         Category::truncate();
 //        Comment::truncate();
 
-        $category= Category::factory(10)->create();
+        $categories= Category::factory(10)->create();
 
-        User::factory(10)->create([
-            'category_id'=>$category->id,
-            ]
-        );
-
+        foreach ($categories as $category) {
+            User::factory(10)->create([
+                'category_id' => $category->id,
+            ]);
+        }
 
 
         // \App\Models\User::factory()->create([
