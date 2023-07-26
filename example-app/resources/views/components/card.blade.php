@@ -12,14 +12,14 @@
                     <a href="#" 
                     class="px-3 py-1 border border-blue-200 rounded-full text-blue-300 text-xs uppercase font-semibold"
                     style="font-size: 10px">
-                Dentist</a>
+                {{$doctor->category->name}}</a>
                 </div>
 
                 <div class="mt-4">
                     <h1 class="text-xl">
 
-                        <a href="/doctors/1">
-                            Ahmed Abdullah
+                        <a href="/doctors/{{$doctor->id}}">
+                            {{$doctor->name}}
                         </a>
                     </h1>
 
@@ -29,7 +29,7 @@
 
         <div class="text-sm mt-4 text-gray-600 ">
 
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis et aliquid velit</p>
+            <p>{{$doctor->description}}</p>
 
            
 
@@ -39,7 +39,7 @@
             <div class=" text-center">
                 <div    class="rounded-md bg-blue-300 inline-block px-4 py-2 my-2 text-white">
 
-                    <a href="">
+                    <a href="/book/doctors/{{$doctor->id}}">
                         Book
                     </a>
                 </div>

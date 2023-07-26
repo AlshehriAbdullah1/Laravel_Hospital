@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id');
+            $table->string('description');
             $table->string('name');
             $table->string('email')->unique();
             $table->double('rating')->default(0);

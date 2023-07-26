@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Models\category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +16,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('index',[
+       'doctors'=>User::paginate(10),
+       'categories'=>Category::get(),
+        ]);
 });
 
+Route::get('/categories/{id}',function (Category $category){
+    dd($category);
+});
 
 Route::get('/doctors/{id}',function ($id) {
-    return $id;
+    return view('doctors.index');
 });
