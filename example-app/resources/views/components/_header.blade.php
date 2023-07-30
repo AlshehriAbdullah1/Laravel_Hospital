@@ -27,7 +27,8 @@
           <!-- Dropdown menu -->
           <x-dropdown>
             @foreach ($categories as $category)
-            @if($category->name==$categoryName)
+
+            @if(isset($categoryName) && $categoryName == $category->name)
             <x-dropdown-item :category="$category" :active=true/>
             @else
             <x-dropdown-item :category="$category" :active=false/>

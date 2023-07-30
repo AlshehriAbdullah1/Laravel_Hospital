@@ -1,3 +1,6 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,12 +41,23 @@
 
             <div class="mt-8 md:mt-0 flex items-center">
                
-                {{-- if not logged in  --}}
-                <a href="" class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5 ">Log in</a>
-                <a href="" class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">Register</a>
+
+             @auth 
+             {{-- if logged in  --}}
+             <p> Welcome! {{auth()->user()->name}}</p>
+
+             @else 
+
+             {{-- if not logged in  --}}
+             <a href="/login"
+              class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5 ">
+              Log in  ==</a>
+             <a href="/register"
+              class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">
+              Register</a>
+             @endauth
 
 
-            {{-- if logged in  --}}
 
 
             {{-- if logged in as admin --}}

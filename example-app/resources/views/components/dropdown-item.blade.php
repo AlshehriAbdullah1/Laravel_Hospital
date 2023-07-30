@@ -3,18 +3,18 @@
     if(!isset($active)){
         $active=false;
     }
-    echo $active;
 
    
     $classes = 'ml-2 text-sm font-medium text-gray-900 dark:text-gray-300';
     if($active){
-        $classes.='bg-blue-500 text-white';
+        $classes.='text-black';
     }
 ?>
 <li>
     <div class="flex items-center">
         <a  href="/category?id={{$category->id}}"for="default-radio-1" class="{{$classes}}">
              <input id="default-radio-1" 
+             {{$active? 'checked' : ''}}
              type="radio" 
              value="" 
              name="default-radio" 

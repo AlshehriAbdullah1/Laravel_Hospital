@@ -1,5 +1,10 @@
 <x-layout>
+    @isset($categoryName)
     <x-_header :categories="$categories" :categoryName="$categoryName" />
+    @else
+    <x-_header :categories="$categories"/>
+
+    @endisset
 
 <div class="lg:grid lg:grid-cols-3 m-5">
     {{-- loop for each doctor,create their specific card =) --}}
