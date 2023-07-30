@@ -3,6 +3,7 @@
     <!-- Learn More: https://formbold.com -->
     <div class="mx-auto w-full max-w-[550px] bg-white">
       <form action="https://formbold.com/s/FORM_ID" method="POST">
+        @csrf
         <div class="mb-5">
           <label
             for="name"

@@ -42,4 +42,13 @@ class User extends Authenticatable
     {
       return $this->belongsTo(Category::class,'category_id');
     }
+
+    // public function scopeFilter($query,array $filters){
+        
+    //     $query->when($filters['search']?? null, function ($query, $search) {
+    //         $query->where('name', 'like', '%'.$search.'%');
+    //     });
+    //     //dd($query);
+    //     return $query;
+    // }
 }

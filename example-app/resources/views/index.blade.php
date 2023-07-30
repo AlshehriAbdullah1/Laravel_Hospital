@@ -1,5 +1,5 @@
 <x-layout>
-    <x-_header :categories="$categories"/>
+    <x-_header :categories="$categories" :categoryName="$categoryName" />
 
 <div class="lg:grid lg:grid-cols-3 m-5">
     {{-- loop for each doctor,create their specific card =) --}}
@@ -13,14 +13,5 @@
 </div>
 
 {{$doctors->links()}}
-        
-
-
-
-
-
-
-
-
     
 </x-layout>
