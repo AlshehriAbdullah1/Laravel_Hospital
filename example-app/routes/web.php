@@ -3,9 +3,13 @@
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\category;
+use App\Models\Comment;
+use App\Models\Patient;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,13 +42,36 @@ Route::get('/category',function (){
 });
 
 
-Route::get('/register', function () {
-   return view('register.create',[
+
+Route::get('/register',function(){
+    return view('register.create');
+})->middleware('guest');
+
+Route::post('/register',function(){
+    $data = request()->validate([
+        'name' => 'required',
+        'email' => ['required', 'email', Rule::unique('patients'),Rule::unique('users')],
+        'phone'=>'required|min:9|max:10',
+        'password' => 'required',
+    ]);
+    $data['password']=bcrypt($data['password']);
+    Patient::create($data);
+    auth('patient')->attempt($data);
+
+
+
+    
+})->middleware('guest');
+
+
+// for doctors only routes
+Route::get('/join', function () {
+   return view('doctors.create',[
     'categories'=>Category::get(),
    ]);
 })->middleware('guest');
 
-Route::post('/register', function () {
+Route::post('/join', function () {
     $data = request()->validate([
         'name' =>'required',
         'email' =>['required',Rule::unique('users','email')],
@@ -101,25 +128,118 @@ Route::get('/search',function (){
 
  //booking 
 
- Route::post('/booking/{user_id}',function (User $user){
-    if(!($user->id !=null && Rule::exists('users','user_id'))){
+ Route::post('/booking/{id}',function (User $user){  
+    $user=User::find(request('id'));
+    if(($user ==null || ! Rule::exists('users','user_id'))){
         abort(404);
     }
-    
+ 
+    //dd(request()->all());
     $data = request()->validate([
-        'name' =>'required',
+        'full_name' =>'required',
         'email' =>['required'],
-        'phone' =>['required'],
-        'datetime_from'=>['required',],
-        'datetime_to'=>['required',],
+        'phone' =>['required','min:9','max:10'],
+        'date' =>['required'],
+        'datetime_from'=>['required'],
+        'datetime_to'=>['required'],
     ]);
-   $data['status']='Pending';
-    Booking::create($data);
-    return redirect('/')->with('success','booking successfully');
+    do {
+        $tracking_number = Str::random(8);
+    } while (Booking::where('tracking_number', $tracking_number)->exists());
+    
+    // At this point, $tracking_number is unique and can be stored in the database.
+    
+
+    
+    $data['tracking_number'] =$tracking_number;
+    $data['user_id'] =$user->id;
+    $data['datetime_from'] = new \DateTime("{$data['date']} {$data['datetime_from']}");
+    $data['datetime_to'] = new \DateTime("{$data['date']} {$data['datetime_to']}");
+    
+    $data['status']='Pending';
+    // dd($data);
+    if (isset($data['date'])) {
+        unset($data['date']);
+    }
+    $booking =  Booking::create($data);
+    return view('components.tracking.track')->with('booking',$booking);
  });
 
 Route::get('/doctors/{id}',function ($id) {
-    return view('doctors.index');
+  
+    $user =User::select('id','category_id','name','rating')->find($id); 
+    // dd($user);
+    if($user){
+        return view('doctors.index',[
+            'doctor'=>User::find($id),
+        ]);
+
+    }
+    else{
+        abort(404);
+    }
 });
+
+
+
+
+Route::post('/doctor/comment/{id}', function (Request $request, $id) {
+    $user = User::find($id);
+
+    if ($user === null) {
+        abort(404);
+    }
+
+  
+    $data = $request->validate([
+        'title' => 'required',
+        'body' => 'required',
+        'rating' => 'required|numeric|min:1|max:5',
+        'name'=>'nullable',
+    ]);
+
+     $data['user_id'] = $user->id;
+     if($data['name'] == null){
+        $data['name'] = 'Anonymous';
+     }
+
+     Comment::create($data);
+     return redirect()->back();
+
+
+
+    
+});
+
+
+
+Route::get('/bookings/track', function () {
+
+
+
+    return view('components.tracking.track',);
+
+
+
+});
+
+
+
+
+
+
+
+ function generateTrackingNumber(){
+    $tracking_number = Str::random(8);
+    while(Booking::where('tracking_number', $tracking_number)->first() === null){
+        $tracking_number = Str::random(8);
+
+    }
+    return $tracking_number;
+
+}
+
+
+
 
 

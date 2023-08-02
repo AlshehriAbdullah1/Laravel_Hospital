@@ -20,8 +20,10 @@ class CommentFactory extends Factory
         return [
             
             'user_id'=>User::factory(),
+            'name'=>$this->faker->name(),
             'title'=>$this->faker->title(),
             'body'=>$this->faker->paragraph(2,true),
+            'rating'=>5,
         ];
     }
 }

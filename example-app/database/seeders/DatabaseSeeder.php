@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Booking;
+use App\Models\Patient;
 use App\Models\Comment;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,15 +27,20 @@ class DatabaseSeeder extends Seeder
                 'category_id' => $category->id,
             ]);
         }
-        $users= User::factory(10)->create();
-
-
+        $users= User::factory(10)->create();   
+        $patient= Patient::factory(1)->create(); 
+        
         foreach($users as $user){
             Booking::factory(1)->create([
                 'user_id' => $user->id, 
                 
-                ]
-            );
+            ]);
+            Comment::factory(1)->create([
+                'user_id' => $user->id, 
+
+
+            ]);
+            
         }
       
 

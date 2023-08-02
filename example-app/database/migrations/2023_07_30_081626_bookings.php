@@ -18,12 +18,11 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('patient_id');
             $table->timestamp('datetime_from');
             $table->timestamp('datetime_to');
             $table->string('status');
-            $table->string('full_name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('tracking_number')->nullable();
             $table->timestamps();
         });
     }

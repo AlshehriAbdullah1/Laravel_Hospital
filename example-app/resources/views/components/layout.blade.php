@@ -1,6 +1,4 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,6 +35,7 @@
             <div class="mt-8 md:mt-0 flex items-center">
 
                 <a href="" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">About us</a>
+                <a href="/bookings/track" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">Your bookings</a>
             </div>
 
             <div class="mt-8 md:mt-0 flex items-center">
@@ -51,10 +50,11 @@
              {{-- if not logged in  --}}
              <a href="/login"
               class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5 ">
-              Log in  ==</a>
+              Log in </a>
              <a href="/register"
               class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">
               Register</a>
+              
              @endauth
 
 
@@ -89,7 +89,7 @@
                 <a href="/contact" class="text-gray-800 hover:underline mx-2">Contact</a>
                 <a href="/contact" class="text-gray-800 hover:underline mx-2">Doctors</a>
                 <a href="/contact" class="text-gray-800 hover:underline mx-2">Vision</a>
-                <a href="/contact" class="text-gray-800 hover:underline mx-2">Become a member</a>
+                <a href="/join" class="text-gray-800 hover:underline mx-2">Become a member</a>
                 <!-- Add more hyperlinks as needed -->
             </div>
         </footer>
