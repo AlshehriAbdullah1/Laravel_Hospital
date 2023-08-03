@@ -28,11 +28,12 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         $users= User::factory(10)->create();   
-        $patient= Patient::factory(1)->create(); 
+        $patient= Patient::factory()->create(); 
         
         foreach($users as $user){
             Booking::factory(1)->create([
                 'user_id' => $user->id, 
+                'patient_id' => $patient->id,
                 
             ]);
             Comment::factory(1)->create([

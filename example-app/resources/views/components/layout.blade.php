@@ -40,10 +40,9 @@
 
             <div class="mt-8 md:mt-0 flex items-center">
                
-
-             @auth 
+             @auth('patient')
              {{-- if logged in  --}}
-             <p> Welcome! {{auth()->user()->name}}</p>
+             <p> Welcome! {{auth('patient')->user()->name}}</p>
 
              @else 
 

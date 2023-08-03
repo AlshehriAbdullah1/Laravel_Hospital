@@ -2,8 +2,8 @@
 
     <section class="px-6 py-8">
         <main class="max-w-lg mx-auto mt-10 bg-gray-100 p-6 rounded-xl border-gray-200">
-            <h1 class="text-center font-bold text-xl">Register!</h1>
-            <form method="POST" action="/register" class="mt-10">
+            <h1 class="text-center font-bold text-xl">Join Us!</h1>
+            <form method="POST" action="/join" class="mt-10">
                 @csrf
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-cs text-gray700"
@@ -19,7 +19,19 @@
                     @enderror
 
                     
-                   
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-cs text-gray-700" for="category">Select Category:</label>
+                        <select name="category_id" id="category" class="border border-gray-400 p-2 w-full">
+                            <option value="" disabled selected>Select a category</option>
+                            @foreach($categories as $category)
+                                
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('category_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
 
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-cs text-gray700"
@@ -33,21 +45,6 @@
                     @error('email')
                     <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                     @enderror
-
-
-                    <div class="mb-6">
-                        <label class="block mb-2 uppercase font-bold text-cs text-gray700"
-                        for="phone">
-                        phone number
-                        </label>
-                        <input type="number" name="phone" id="phone" required
-                        class="border border-gray-400 p-2 w-full"
-                        value="{{old('phone')}}">
-                    </div>
-                    @error('phone')
-                    <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-                    @enderror
-
 
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-cs text-gray700"

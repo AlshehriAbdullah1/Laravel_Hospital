@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Models\Booking;
 use App\Models\category;
 use App\Models\Comment;
-use App\Models\Patient;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -47,21 +47,7 @@ Route::get('/register',function(){
     return view('register.create');
 })->middleware('guest');
 
-Route::post('/register',function(){
-    $data = request()->validate([
-        'name' => 'required',
-        'email' => ['required', 'email', Rule::unique('patients'),Rule::unique('users')],
-        'phone'=>'required|min:9|max:10',
-        'password' => 'required',
-    ]);
-    $data['password']=bcrypt($data['password']);
-    Patient::create($data);
-    auth('patient')->attempt($data);
-
-
-
-    
-})->middleware('guest');
+Route::post('/register',[RegisterController::class, 'create'])->middleware('guest');
 
 
 // for doctors only routes

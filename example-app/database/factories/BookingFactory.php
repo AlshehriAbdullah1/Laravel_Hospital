@@ -17,12 +17,12 @@ class BookingFactory extends Factory
     public function definition()
     {
         return [
+            
             'datetime_from' => date('Y-m-d H:i:s'),
             'datetime_to' => date('Y-m-d H:i:s', strtotime('+2 hours')),
             'status' => 'pending',
-            'full_name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'phone' => $this->faker->phoneNumber,
+            'tracking_number'=>'123456',
+            
 
         ];
     }
