@@ -83,7 +83,7 @@
         <!-- Comment Form -->
         <div class="bg-gray-200  p-8">
            
-            <x-doctors.comment-form :doctor="$doctor" />
+            <x-doctors.comment-form :doctor="$doctor" :patient="$patient" />
         </div>
     </div>
     

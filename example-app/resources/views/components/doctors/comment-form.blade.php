@@ -21,6 +21,7 @@
 </style>
 
 <div class="flex items-center justify-center ">
+   {{-- @dd($patient->name) --}}
     <div class="bg-gray-200 rounded-xl p-4 w-full max-w-md">
         <header>
             <h1 class="font-bold mb-4 text-center">Leave a Review</h1>
@@ -37,12 +38,12 @@
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                 </div>
                 <div class="mb-4">
-                    <input type="checkbox" id="anonymous" class="mr-2" onchange="toggleNameInput()">
+                    <input type="checkbox" id="anonymous" class="mr-2" onchange="toggleNameInput()" >
                     <label for="anonymous" class="text-gray-700">Send Anonymously</label>
                 </div>
-                <div class="mb-4" id="nameInputContainer">
+                <div class="mb-4" id="nameInputContainer" style="display: none">
                     <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Your Name</label>
-                    <input type="text" name="name" id="name"
+                    <input type="text" name="name" id="name" value="{{$patient->name}}"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-4">
@@ -76,12 +77,14 @@
     function toggleNameInput() {
         const nameInputContainer = document.getElementById('nameInputContainer');
         const anonymousCheckbox = document.getElementById('anonymous');
-
+       
         if (anonymousCheckbox.checked) {
             nameInputContainer.style.display = 'none';
             document.getElementById('name').value = '';
+           
         } else {
-            nameInputContainer.style.display = 'block';
+            document.getElementById('name').value = {{$patient->name}}
+            // document.getElementById('name').value = {{auth('patient')->user()->name}}
         }
     }
 </script>

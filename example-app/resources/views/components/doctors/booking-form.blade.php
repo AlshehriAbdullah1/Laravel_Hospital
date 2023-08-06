@@ -2,52 +2,8 @@
     <div class="mx-auto max-w-xl bg-white">
       <form action="/booking/{{$doctor->id}}" method="POST">
         @csrf
-        <div class="mb-5">
-          <label
-            for="name"
-            class="mb-3 block text-base font-medium text-[#07074D]"
-          >
-            Full Name
-          </label>
-          <input
-            type="text"
-            name="full_name"
-            id="full_name"
-            placeholder="Full Name"
-            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-          />
-        </div>
-        <div class="mb-5">
-          <label
-            for="phone"
-            class="mb-3 block text-base font-medium text-[#07074D]"
-          >
-            Phone Number
-          </label>
-          <input
-            type="text"
-            name="phone"
-            id="phone"
-            placeholder="Enter your phone number"
-            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-          />
-        </div>
-        <div class="mb-5">
-          <label
-            for="email"
-            class="mb-3 block text-base font-medium text-[#07074D]"
-          >
-            Email Address
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter your email"
-            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-          />
-        </div>
-
+        
+       
         {{-- DATE-TIME Component --}}
         <div class="grid grid-cols-1 gap-6 my-3">
           <div>

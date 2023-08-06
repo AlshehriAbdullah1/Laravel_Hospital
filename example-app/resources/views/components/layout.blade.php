@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/cs">
@@ -39,32 +40,38 @@
             </div>
 
             <div class="mt-8 md:mt-0 flex items-center">
-               
-             @auth('patient')
-             {{-- if logged in  --}}
-             <p> Welcome! {{auth('patient')->user()->name}}</p>
-
-             @else 
-
-             {{-- if not logged in  --}}
-             <a href="/login"
-              class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5 ">
-              Log in </a>
-             <a href="/register"
-              class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">
-              Register</a>
-              
-             @endauth
-
-
-
-
-            {{-- if logged in as admin --}}
-
-
-                {{-- <a href="#newsletter" class="bg-blue-400 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
-                    Subscribe for Updates
-                </a> --}}
+                @auth('patient')
+                <!-- Show content for authenticated 'patient' users -->
+                <p>Welcome! {{ auth('patient')->user()->name }}</p>
+                <a href="/logout"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   class="text-blue-400 ml-5">
+                   Logout
+                </a>
+              @elseauth('web')
+                <!-- Show content for authenticated 'web' users -->
+                <p>Welcome! {{ auth('web')->user()->name }}</p>
+                <a href="/logout"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   class="text-blue-400 ml-5">
+                   Logout
+                </a>
+            @else
+                <!-- Show content for guest users (not authenticated) -->
+                <a href="/login" class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">
+                    Log in
+                </a>
+                <a href="/register" class="bg-gray-400 ml-3 rounded-full text-xs font-semibold hover:bg-blue-400 text-white uppercase py-3 px-5 mr-5">
+                    Register
+                </a>
+            @endauth
+            
+           
+            <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                @csrf
+            </form>
+            
+       
             </div>
             
         </nav>

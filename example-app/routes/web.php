@@ -5,11 +5,15 @@ use App\Models\Booking;
 use App\Models\category;
 use App\Models\Comment;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DoctorController;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,46 +61,39 @@ Route::get('/join', function () {
    ]);
 })->middleware('guest');
 
-Route::post('/join', function () {
-    $data = request()->validate([
-        'name' =>'required',
-        'email' =>['required',Rule::unique('users','email')],
-        'password' => 'required|max:255|min:7',
-        'category_id' =>'required',
-        'description'=>'required|max:255|min:10',
-    ]);
-    $data['password']=bcrypt($data['password']);
-    User::create($data);
-    if(auth()->attempt($data)){
-    
-        return redirect('/');
-    }
-    else{
-        return redirect('/login');
-        
-    }
-})->middleware('guest');
+Route::post('/join', [DoctorSessionController::class, 'store'])->middleware('guest'); 
+   
 
 Route::get('/login', function () {
     return view('login.login');
-})->middleware('guest');
+})->name('login')->middleware('guest');
 
 Route::post('/login', function () {
     $data = request()->validate([
-        'email' =>['required'],
+        'email' => 'required|email',
         'password' => 'required',
     ]);
-    
-   // dd($data);
-    if(auth()->attempt($data)){
-        session()->regenerate();
-        return redirect('/')->with('success','login successfully');
-    }else{
-        return back()->withInput()->withErrors(['email'=> 'invalid email or password']);
+
+    if (auth('patient')->attempt($data)) {
+       // dd("patient");
+        // Authentication success
+        return redirect('/'); // Replace with the desired redirect URL after login
     }
-})->middleware('guest');
+    elseif(auth()->attempt($data)){
+       // dd("default login");
+        return redirect('/'); // Replace with the desired redirect URL after login
+    } else {
+        // Authentication failed
+        dd('Authentication failed!!. ');
+    }
+});
 
+Route::post('/logout',function (){
+        auth('patient')->logout();
+        auth()->logout();
+        return redirect('/login');
 
+});
 Route::get('/search',function (){
 
     if(request('search')==null ||strlen(request('search'))==0){
@@ -120,11 +117,9 @@ Route::get('/search',function (){
         abort(404);
     }
  
-    //dd(request()->all());
+    dd(request()->all());
     $data = request()->validate([
-        'full_name' =>'required',
-        'email' =>['required'],
-        'phone' =>['required','min:9','max:10'],
+
         'date' =>['required'],
         'datetime_from'=>['required'],
         'datetime_to'=>['required'],
@@ -134,7 +129,10 @@ Route::get('/search',function (){
     } while (Booking::where('tracking_number', $tracking_number)->exists());
     
     // At this point, $tracking_number is unique and can be stored in the database.
-    
+   // dd(Auth::guard('patient')->user());
+    if(Auth::check()){
+        $loggedInUserId=Auth::user()->user_id;
+    }
 
     
     $data['tracking_number'] =$tracking_number;
@@ -143,28 +141,32 @@ Route::get('/search',function (){
     $data['datetime_to'] = new \DateTime("{$data['date']} {$data['datetime_to']}");
     
     $data['status']='Pending';
-    // dd($data);
+    
     if (isset($data['date'])) {
         unset($data['date']);
     }
-    $booking =  Booking::create($data);
-    return view('components.tracking.track')->with('booking',$booking);
+     dd($data);
+   // $booking =  Booking::create($data);
+    //return view('components.tracking.track')->with('booking',$booking);
  });
 
 Route::get('/doctors/{id}',function ($id) {
   
     $user =User::select('id','category_id','name','rating')->find($id); 
     // dd($user);
+    $patient = Auth::guard('patient')->user();
+    //dd($patient);
     if($user){
         return view('doctors.index',[
             'doctor'=>User::find($id),
+            'patient'=>$patient,
         ]);
 
     }
     else{
         abort(404);
     }
-});
+})->middleware('auth:patient');
 
 
 
@@ -182,13 +184,14 @@ Route::post('/doctor/comment/{id}', function (Request $request, $id) {
         'body' => 'required',
         'rating' => 'required|numeric|min:1|max:5',
         'name'=>'nullable',
-    ]);
-
-     $data['user_id'] = $user->id;
-     if($data['name'] == null){
+    ]);  
+    
+    
+    $data['user_id'] = $user->id;
+    if($data['name'] == null){
         $data['name'] = 'Anonymous';
-     }
-
+    }
+    
      Comment::create($data);
      return redirect()->back();
 
@@ -215,15 +218,6 @@ Route::get('/bookings/track', function () {
 
 
 
- function generateTrackingNumber(){
-    $tracking_number = Str::random(8);
-    while(Booking::where('tracking_number', $tracking_number)->first() === null){
-        $tracking_number = Str::random(8);
-
-    }
-    return $tracking_number;
-
-}
 
 
 

@@ -39,7 +39,7 @@
             <div class=" text-center">
                 <div    class="rounded-md bg-blue-300 inline-block px-4 py-2 my-2 text-white">
 
-                    <a href="/book/doctors/{{$doctor->id}}">
+                    <a href="/doctors/{{$doctor->id}}">
                         Book
                     </a>
                 </div>
