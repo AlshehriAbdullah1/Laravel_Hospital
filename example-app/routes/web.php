@@ -6,6 +6,7 @@ use App\Models\category;
 use App\Models\Comment;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -71,7 +72,7 @@ Route::get('/login', function () {
 Route::post('/login', function () {
     $data = request()->validate([
         'email' => 'required|email',
-        'password' => 'required',
+        'password' => ['required'],
     ]);
 
     if (auth('patient')->attempt($data)) {
@@ -84,7 +85,7 @@ Route::post('/login', function () {
         return redirect('/'); // Replace with the desired redirect URL after login
     } else {
         // Authentication failed
-        dd('Authentication failed!!. ');
+        return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
     }
 });
 
@@ -117,7 +118,7 @@ Route::get('/search',function (){
         abort(404);
     }
  
-    dd(request()->all());
+    // dd(request()->all());
     $data = request()->validate([
 
         'date' =>['required'],
@@ -128,26 +129,38 @@ Route::get('/search',function (){
         $tracking_number = Str::random(8);
     } while (Booking::where('tracking_number', $tracking_number)->exists());
     
+  //  dd(request()->all());
     // At this point, $tracking_number is unique and can be stored in the database.
    // dd(Auth::guard('patient')->user());
-    if(Auth::check()){
-        $loggedInUserId=Auth::user()->user_id;
-    }
-
-    
     $data['tracking_number'] =$tracking_number;
     $data['user_id'] =$user->id;
     $data['datetime_from'] = new \DateTime("{$data['date']} {$data['datetime_from']}");
     $data['datetime_to'] = new \DateTime("{$data['date']} {$data['datetime_to']}");
-    
+    $data['datetime_from'] = Carbon::parse($data['datetime_from'])->format('Y-m-d H:i:s');
+    $data['datetime_to'] = Carbon::parse($data['datetime_to'])->format('Y-m-d H:i:s');
     $data['status']='Pending';
-    
+    $data['patient_id']=auth('patient')->user()->id?? 'Undefined';
     if (isset($data['date'])) {
         unset($data['date']);
     }
-     dd($data);
-   // $booking =  Booking::create($data);
-    //return view('components.tracking.track')->with('booking',$booking);
+   $booking =  Booking::create($data);
+        
+        return redirect('/bookings/tracking?id=' . $booking->tracking_number);
+
+    
+    
+    // ->
+    
+    // with('booking',[
+    //     'name'=> $booking->patient->name,
+    //     'phone'=> $booking->patient->phone,
+    //     'status'=> $booking->status,
+    //     'email'=> $booking->patient->email,
+    //     'tracking_number'=> $booking->tracking_number,
+    //     'date'=> Carbon::createFromTimestamp($booking->date_from)->format('d M, Y'),
+    //     'datetime_from'=> Carbon::createFromTimestamp($booking->date_from)->format('h:iA'),
+    //     'datetime_to'=> Carbon::createFromTimestamp($booking->to)->format('h:iA'),
+    // ])
  });
 
 Route::get('/doctors/{id}',function ($id) {
@@ -202,15 +215,77 @@ Route::post('/doctor/comment/{id}', function (Request $request, $id) {
 
 
 
-Route::get('/bookings/track', function () {
+Route::get('/bookings/tracking', function () {
+
+    // dd(request()->all());
+    $booking = Booking::where('tracking_number', request('id'))->first();
+    if ($booking === null) {
+        abort(404);
+    }
+    else{
+        
+    }
+
+    $formattedDatetimeFrom = Carbon::parse($booking->datetime_from)->format('d M, Y');
+    $formattedTimeFrom = Carbon::parse($booking->datetime_from)->format('h:iA');
+    $formattedTimeTo = Carbon::parse($booking->datetime_to)->format('h:iA');
+
+
+    $data = [
+        'name' => $booking->patient->name,
+        'phone' => $booking->patient->phone,
+      'status' => $booking->status,
+      'email'=> $booking->patient->email,
+      'tracking_number'=> $booking->tracking_number,
+      'date'=> $formattedDatetimeFrom,
+      'datetime_from'=> $formattedTimeFrom,
+      'datetime_to'=> $formattedTimeTo, 
+    ];
+
+    
+    return view('components.tracking.track',)->with('booking', $data);
 
 
 
-    return view('components.tracking.track',);
+})->middleware('auth:patient');
 
 
 
-});
+
+
+Route::get('bookings/all',function(){
+    // dd(auth('web')->user()->id);
+
+    $bookings = User::find(auth('web')->user()->id)->bookings;
+
+    $modifiedBookings = $bookings->map(function ($booking) {
+        $formattedDatetimeFrom = Carbon::parse($booking->datetime_from)->format('d M, Y');
+        $formattedTimeFrom = Carbon::parse($booking->datetime_from)->format('h:iA');
+        $formattedTimeTo = Carbon::parse($booking->datetime_to)->format('h:iA');
+    
+        return [
+            'id'=>$booking->id,
+            'name' => $booking->patient->name,
+            'phone' => $booking->patient->phone,
+            'status' => $booking->status,
+            'email' => $booking->patient->email,
+            'tracking_number' => $booking->tracking_number,
+            'date' => $formattedDatetimeFrom,
+            'datetime_from' => $formattedTimeFrom,
+            'datetime_to' => $formattedTimeTo,
+        ];
+    });
+    
+        // dd(auth()->user());
+    return view('components.doctors.track',[
+        'bookings'=>$modifiedBookings
+    ]);
+})->middleware('auth:web');
+
+
+Route::post('/bookings/suspend/{id}',[BookingController::class,'suspend']);
+Route::post('/bookings/complete/{id}',[BookingController::class,'complete']);
+
 
 
 

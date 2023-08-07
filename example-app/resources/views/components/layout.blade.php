@@ -36,7 +36,20 @@
             <div class="mt-8 md:mt-0 flex items-center">
 
                 <a href="" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">About us</a>
+
+
+
+
+
+                @auth('patient')
+
                 <a href="/bookings/track" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">Your bookings</a>
+
+                @elseauth('web')
+
+                <a href="/bookings/all" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">Bookings Requests</a>
+
+                @endauth
             </div>
 
             <div class="mt-8 md:mt-0 flex items-center">

@@ -20,13 +20,16 @@
         <button type="submit">Track</button>
     </form> --}}
 
-    
-    @isset($booking)
+  
+    @isset($bookings)
        <div class="flex mt-10 mb-3 justify-between">
-        <h1 class="text-2xl text-center ">Your bookings</h1>
+        <h1 class="text-2xl text-center ">Booking Requests</h1>
         <div>
 
-            <div class="flex">
+
+
+            <h1>search goes here</h1>
+            {{-- <div class="flex">
                 <h1 class="mr-4">Enter A Tracking Number</h1>
 
                 <form action="" method="POST">
@@ -35,7 +38,7 @@
                <button class="bg-gray-300 p-1  pr-2 rounded-xl hover:bg-blue-400" type="submit">Track</button>
            </form>
                 
-            </div>
+            </div> --}}
             
         </div>
        
@@ -53,51 +56,27 @@
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Time</th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Tracking Number</th>
+                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
+                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
+
             </tr>
         </thead>
 
         <tbody class="bg-white">
-            <tr>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 h-10 w-10">
-                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                        </div>
 
-                        <div class="ml-4">
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{$booking['name']}}</div>
-                            <div class="text-sm leading-5 text-gray-500">{{$booking['phone']}}</div>
-                        </div>
-                    </div>
-                </td>
+
+
+            @foreach ($bookings as $booking)
                
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div class="text-sm leading-5 text-gray-900">{{$booking['email']}}</div>
-                    {{-- <div class="text-sm leading-5 text-gray-500">Web dev</div> --}}
-                </td>
+                <x-doctors.booking-component :booking="$booking" /> 
 
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{$booking['status']}}</span>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">{{ $booking['date']}}</td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">{{ $booking['datetime_from'] }} - {{ $booking['datetime_to'] }}</td>
-
-                <td class="px-6 py-4 whitespace-no-wrap text-left border-b border-gray-200 text-sm leading-5 font-medium">
-                    
-                    {{-- <a href="#" class="text-indigo-600 hover:text-indigo-900">(HsxTtzyZ)</a> --}}
-                    <div id="notification" class="hidden">
-                        Text copied successfully!
-                    </div>
-                    <span id="tracking" class="text-indigo-600 hover:text-indigo-900 cursor-pointer">{{$booking['tracking_number']}}</span>
-
-                </td>
-            </tr>
-        </tr>
+            @endforeach
+           {{-- something was here --}}
        </tbody>
        </table>
 
     @else   
-    <p>No booking found with the entered tracking number.</p>
+    <h1 class="text-center m-5">Sorry, You Have No Booking Requests </h1>
     @endisset
 
 </div>
@@ -124,4 +103,7 @@ tracking.addEventListener("copy", function(event) {
 
 </script>
 </x-layout>
+
+
+
 
