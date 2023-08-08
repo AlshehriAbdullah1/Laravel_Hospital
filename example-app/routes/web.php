@@ -112,56 +112,7 @@ Route::get('/search',function (){
 
  //booking 
 
- Route::post('/booking/{id}',function (User $user){  
-    $user=User::find(request('id'));
-    if(($user ==null || ! Rule::exists('users','user_id'))){
-        abort(404);
-    }
- 
-    // dd(request()->all());
-    $data = request()->validate([
-
-        'date' =>['required'],
-        'datetime_from'=>['required'],
-        'datetime_to'=>['required'],
-    ]);
-    do {
-        $tracking_number = Str::random(8);
-    } while (Booking::where('tracking_number', $tracking_number)->exists());
-    
-  //  dd(request()->all());
-    // At this point, $tracking_number is unique and can be stored in the database.
-   // dd(Auth::guard('patient')->user());
-    $data['tracking_number'] =$tracking_number;
-    $data['user_id'] =$user->id;
-    $data['datetime_from'] = new \DateTime("{$data['date']} {$data['datetime_from']}");
-    $data['datetime_to'] = new \DateTime("{$data['date']} {$data['datetime_to']}");
-    $data['datetime_from'] = Carbon::parse($data['datetime_from'])->format('Y-m-d H:i:s');
-    $data['datetime_to'] = Carbon::parse($data['datetime_to'])->format('Y-m-d H:i:s');
-    $data['status']='Pending';
-    $data['patient_id']=auth('patient')->user()->id?? 'Undefined';
-    if (isset($data['date'])) {
-        unset($data['date']);
-    }
-   $booking =  Booking::create($data);
-        
-        return redirect('/bookings/tracking?id=' . $booking->tracking_number);
-
-    
-    
-    // ->
-    
-    // with('booking',[
-    //     'name'=> $booking->patient->name,
-    //     'phone'=> $booking->patient->phone,
-    //     'status'=> $booking->status,
-    //     'email'=> $booking->patient->email,
-    //     'tracking_number'=> $booking->tracking_number,
-    //     'date'=> Carbon::createFromTimestamp($booking->date_from)->format('d M, Y'),
-    //     'datetime_from'=> Carbon::createFromTimestamp($booking->date_from)->format('h:iA'),
-    //     'datetime_to'=> Carbon::createFromTimestamp($booking->to)->format('h:iA'),
-    // ])
- });
+ Route::post('/booking/{id}',[BookingController::class, 'create'])->middleware('auth:patient');;
 
 Route::get('/doctors/{id}',function ($id) {
   
@@ -218,6 +169,10 @@ Route::post('/doctor/comment/{id}', function (Request $request, $id) {
 Route::get('/bookings/tracking', function () {
 
     // dd(request()->all());
+    if(request('id') == null){
+        $booking= Booking::where('patient_id','=',Auth::guard('patient')->user()->id)->latest()->paginate(5);
+        return view('components.tracking.track',);
+    }
     $booking = Booking::where('tracking_number', request('id'))->first();
     if ($booking === null) {
         abort(404);

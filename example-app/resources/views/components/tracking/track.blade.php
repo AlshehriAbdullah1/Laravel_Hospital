@@ -97,7 +97,7 @@
        </table>
 
     @else   
-    <p>No booking found with the entered tracking number.</p>
+    <h1 class="text-center text-2xl m-5">Sorry, No booking found with the entered tracking number</h1>
     @endisset
 
 </div>

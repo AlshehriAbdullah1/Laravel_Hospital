@@ -15,4 +15,9 @@ class Patient extends Authenticatable
     use HasFactory;
     protected $guarded = [];
     protected $guard = 'patient';
+
+    public function bookings(){
+        return $this->hasMany(Booking::class);
+    }
+
 }

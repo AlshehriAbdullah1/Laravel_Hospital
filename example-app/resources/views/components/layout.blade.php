@@ -106,8 +106,7 @@
             <div class="mt-8">
                 <a href="/about" class="text-gray-800 hover:underline mx-2">About Us</a>
                 <a href="/contact" class="text-gray-800 hover:underline mx-2">Contact</a>
-                <a href="/contact" class="text-gray-800 hover:underline mx-2">Doctors</a>
-                <a href="/contact" class="text-gray-800 hover:underline mx-2">Vision</a>
+                <a href="/" class="text-gray-800 hover:underline mx-2">Doctors</a>
                 <a href="/join" class="text-gray-800 hover:underline mx-2">Become a member</a>
                 <!-- Add more hyperlinks as needed -->
             </div>
