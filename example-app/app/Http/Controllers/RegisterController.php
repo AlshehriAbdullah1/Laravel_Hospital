@@ -5,7 +5,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 class RegisterController extends Controller
-{
+{   
+
+    public function index(){
+        return view('register.create');
+    }
+
+
     public function create(Request $request)
 {
     $data = $request->validate([

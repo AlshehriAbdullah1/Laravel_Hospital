@@ -42,6 +42,8 @@
 
     </td >
 
+
+    @auth('web')
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
         <form action="/bookings/suspend/{{ $booking['id'] }}" method="POST">
             @csrf
@@ -57,6 +59,8 @@
         </form>
 
     </td>
+
+    @endauth
 
 
 

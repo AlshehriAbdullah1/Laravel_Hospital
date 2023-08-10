@@ -22,30 +22,23 @@
 
   
     @isset($bookings)
-       <div class="flex mt-10 mb-3 justify-between">
-        <h1 class="text-2xl text-center ">Booking Requests</h1>
-        <div>
-
-
-
-            <h1>search goes here</h1>
-            {{-- <div class="flex">
-                <h1 class="mr-4">Enter A Tracking Number</h1>
-
-                <form action="" method="POST">
-               @csrf
-               <input type="text" name="tracking_number" required>
-               <button class="bg-gray-300 p-1  pr-2 rounded-xl hover:bg-blue-400" type="submit">Track</button>
-           </form>
-                
-            </div> --}}
-            
+    <div class="flex items-center justify-between mt-10 mb-3">
+        @auth("patient")
+        <h1 class="text-2xl font-serif">Your Bookings</h1>
+        @elseauth("web")
+        <h1 class="text-2xl font-semibold">Booking Requests</h1>
+        @endauth
+    
+        <div class="my-8">
+            <h2 class="text-lg  mb-1">Search by Tracking Number</h2>
+            <form action="" method="GET" class="flex items-center space-x-2">
+                @csrf
+                <input type="text" name="tracking_number" placeholder="Enter Tracking Number" class="px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300" type="submit">Track</button>
+            </form>
         </div>
-       
-          
-
-          
-       </div>
+    </div>
+    
 
        <table class="min-w-full">
         <thead>
@@ -56,8 +49,10 @@
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Time</th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Tracking Number</th>
+                @auth('web')
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
+                @endauth
 
             </tr>
         </thead>

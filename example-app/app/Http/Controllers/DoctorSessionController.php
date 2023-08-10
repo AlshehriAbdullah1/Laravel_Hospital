@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\category;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -9,7 +10,9 @@ class DoctorSessionController extends Controller
 {
     public function index(){
 
-
+         return view('doctors.create',[
+    'categories'=>Category::get(),
+   ]);
         
     }
     public function create(){

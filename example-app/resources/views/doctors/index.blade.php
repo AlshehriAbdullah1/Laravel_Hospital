@@ -62,10 +62,25 @@
                  
                 </div>
                  {{-- booking form --}}
-                 <div class="text-center">
-                    <h1 class="mt-10 text-xl text-bold">Book!</h1>
-                    <x-doctors.booking-form :doctor="$doctor"/>
-                </div>
+                                 <div class="text-center">
+                                    <h1 class="mt-10 text-xl text-bold">Book!</h1>
+                                    <x-doctors.booking-form :doctor="$doctor"/>
+                                </div>
+                                @if ($errors->any())
+                    <div class="alert alert-danger text-red-600 absolute">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+                @if(session('conflict'))
+                    <div class="alert alert-danger">
+                        {{ session('conflict') }}
+                    </div>
+                @endif
 
                 
                  {{-- @include('doctors.booking-form') --}}

@@ -6,7 +6,11 @@
 
     @endisset
 
-<div class="lg:grid lg:grid-cols-3 m-5">
+
+    <div>
+
+    </div>
+<div class="lg:grid lg:grid-cols-3 m-5 max-w-screen-xl">
     {{-- loop for each doctor,create their specific card =) --}}
     {{-- pass data to the card--}}
     @foreach ($doctors as $doctor)

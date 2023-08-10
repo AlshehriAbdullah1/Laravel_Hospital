@@ -43,7 +43,7 @@
 
                 @auth('patient')
 
-                <a href="/bookings/track" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">Your bookings</a>
+                <a href="/bookings" class="ml-3  text-xs font-semibold text-black uppercase  mr-5">Your bookings</a>
 
                 @elseauth('web')
 
